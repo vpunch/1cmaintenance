@@ -1,0 +1,16 @@
+@echo off
+chcp 1251
+
+set PATH=C:\Program Files (x86)\1cv8\8.3.15.1656\bin;C:\Program Files\7-Zip;%PATH%
+:: yyyy-MM-dd HHmmss
+set MARK=%DATE:~6,4%-%DATE:~3,2%-%DATE:~0,2% %TIME:~0,2%.%TIME:~3,2%.%TIME:~6,2%
+set STOR=Z:\1cbak
+set LOG=%~dp0maintenance.log
+set PASS=8.vcC.4l
+
+:: Имя информационной базы
+set IB[0].NAME=Бухгалтерия Компании
+set IB[0].USR=Администратор
+set IB[0].PASS=123456
+:: Путь к файловой БД или имя базы в СУБД. В последнем варианте может быть пустым, если выгружаются все базы за исключением шаблонных и пользователя
+set IB[0].DB=D:\DB\Comp Acc
