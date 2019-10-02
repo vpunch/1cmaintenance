@@ -1,12 +1,15 @@
 #! /bin/bash
 
-pg_basebackup -p 5432 -F tar -z -D /mnt/1cbak/base/$(date +\%Y-\%m-\%d)
-/root/rm1cbak.sh
+. $(dirname $0)/settings.sh
 
-cd /mnt/1cbak
+msg "$(basename $0) START"
 
-LAST=$(find wal/ -type f -name '*.backup' -mtime +30 -print | tail -n 1)
+pg_basebackup -w -F tar -z -D "$STOR/bin/$MARK"
+
+LAST=$(find "$STOR/log/" -type f -name '*.backup' -mtime +30 -print | tail -n 1)
 if [[ -n $LAST ]]; then
-    find wal/ -type f ! -newer $LAST -delete
-    find base/ -mindepth 1 -type d ! -newer $LAST -delete
+    find "$STOR/log/" -type f ! -newer $LAST -delete
+    find "$STOR/bin/" -mindepth 1 -type d ! -newer $LAST -delete
 fi
+
+msg "$(basename $0) END"

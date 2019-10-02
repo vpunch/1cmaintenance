@@ -1,2 +1,0 @@
-0 22 * *   * postgres /usr/local/bin/1cmaintenance/main
-0  0 * * 0,4 postgres /usr/local/bin/1cmaintenance/archive_bin

@@ -19,3 +19,5 @@
 Обновлятор стоит денег.
 
 Если журнал регистрации успел разростись, скачать `sqlite-tools-win32-x86-3290000.zip` здесь https://www.sqlite.org/download.html, сократить журнал в Конфигураторе, затем освободить выделенную память командой `sqlite3 путь vacuum`.
+
+`0  0 * * 0,4 postgres /usr/local/bin/1cmaintenance/archive_bin`

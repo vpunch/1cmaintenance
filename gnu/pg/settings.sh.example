@@ -1,0 +1,15 @@
+STOR=/mnt/1cbak
+LOG=$(dirname $0)/maintenance.log
+declare -A DBS
+DBS=([Бухгалтерия Компании]=acc)
+PASS=8.vcC.4l
+
+PGHOST=127.0.0.1
+PGPORT=5432
+PGUSER=postgres
+PGPASSWORD=123456
+
+MARK=$(date +'%F %H.%M.%S')
+function msg {
+	echo $(date +'%F %H.%M.%S') $1 >> $LOG
+}
