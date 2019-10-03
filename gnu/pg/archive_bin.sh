@@ -1,6 +1,7 @@
 #! /bin/bash
 
 . $(dirname $0)/settings.sh
+. $(dirname $0)/common.sh
 
 msg "$(basename $0) START"
 
