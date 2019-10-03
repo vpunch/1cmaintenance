@@ -4,9 +4,9 @@
 . $(dirname $0)/common.sh
 STOR=$STOR/sql
 
-msg "$(basename $0) START"
-
 mkdir -p $STOR
+
+msg "$(basename $0) START"
 
 for DB in "${DBS[@]}"; do
 	DBLIST+=" $DB"

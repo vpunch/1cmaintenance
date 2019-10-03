@@ -1,5 +1,5 @@
 STOR=/mnt/1cbak
-LOG=$(dirname $0)/maintenance.log
+LOG=$STOR/maintenance.log
 declare -A DBS
 DBS=([Бухгалтерия Компании]=acc)
 PASS=8.vcC.4l

@@ -1,9 +1,9 @@
 call "%~dp0\..\settings.bat"
 set STOR=%STOR%\bin
 
-echo %DATE% %TIME% %~n0 START >> "%LOG%"
-
 if not exist "%STOR%\" mkdir "%STOR%"
+
+echo %DATE% %TIME% %~n0 START >> "%LOG%"
 
 set I=0
 :Next

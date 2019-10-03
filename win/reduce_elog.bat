@@ -3,9 +3,9 @@ set STOR=%STOR%\elog
 
 setlocal enabledelayedexpansion
 
-echo %DATE% %TIME% %~n0 START >> "%LOG%"
-
 if not exist "%STOR%\" mkdir "%STOR%"
+
+echo %DATE% %TIME% %~n0 START >> "%LOG%"
 
 set I=0
 :Next
