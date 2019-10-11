@@ -1,4 +1,5 @@
-**/settings*
-!**/settings*.example
-**/maintenance.log
+settings*
+!settings*.example
+*.log
 build*
+CMakeLists.txt.user
