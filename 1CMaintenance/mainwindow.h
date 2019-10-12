@@ -3,15 +3,9 @@
 
 #include <QMainWindow>
 #include <QTabWidget>
-#include <QListView>
-#include <QStackedWidget>
-#include <QSplitter>
-#include <QLabel>
-#include <QComboBox>
-#include <QLineEdit>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QSettings>
+
+#include "ibstab.h"
+
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
