@@ -14,23 +14,32 @@
 #include <QTextStream>
 
 #include "ibdescwgt.h"
+#include "commontab.h"
 
 
 class IBsTab : public QWidget {
     Q_OBJECT
 
-    QListView* ibsView;
+    Qt::ItemDataRole DescRole = (Qt::ItemDataRole)(Qt::UserRole + 1);
+
     QStandardItemModel* ibsModel;
+
+    QListView* ibsView;
     IBDescWgt* descWgt;
 
     void readIBs();
     void saveIBs();
     void loadIBs();
+
     void showMenu(const QPoint& pos);
-    void fillDescWgt(const QModelIndex& midx);
+    void fillDescWgt(const QModelIndex& cur, const QModelIndex&);
+    void acceptChange(const QString& ibName, const IBDesc& data);
 
 public:
-    explicit IBsTab(QWidget* parent = nullptr);
+    // IBsTab владеет указателем и сам заботится об уничтожении объекта
+    const QStandardItemModel* getIBsModel() const {return ibsModel;}
+
+    explicit IBsTab(const CommonParam* comParam, QWidget* parent = nullptr);
     ~IBsTab();
 };
 

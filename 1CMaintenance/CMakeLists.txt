@@ -21,6 +21,12 @@ add_executable(1CMaintenance
   ibstab.h
   ibdescwgt.cpp
   ibdescwgt.h
+  commontab.cpp
+  commontab.h
+  toolkit.cpp
+  toolkit.h
+  taskstab.cpp
+  taskstab.h
   icons.qrc
 )
 

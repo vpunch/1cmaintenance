@@ -3,9 +3,9 @@
 #include <QDebug>
 
 
-IBsTab::IBsTab(QWidget* parent) : QWidget(parent)
+IBsTab::IBsTab(const CommonParam* comParam, QWidget* parent) : QWidget(parent)
 {
-    ibsModel = new QStandardItemModel;
+    ibsModel = new QStandardItemModel(this);
 
     ibsView = new QListView;
     ibsView->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
@@ -13,9 +13,11 @@ IBsTab::IBsTab(QWidget* parent) : QWidget(parent)
     ibsView->setModel(ibsModel);
     ibsView->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ibsView, &QListView::customContextMenuRequested, this, &IBsTab::showMenu);
-    connect(ibsView, &QListView::clicked, this, &IBsTab::fillDescWgt);
+    connect(ibsView->selectionModel(), &QItemSelectionModel::currentChanged,
+            this, &IBsTab::fillDescWgt);
 
-    descWgt = new IBDescWgt;
+    descWgt = new IBDescWgt(comParam);
+    connect(descWgt, &IBDescWgt::descChanged, this, &IBsTab::acceptChange);
 
     QSplitter* splt = new QSplitter;
     splt->addWidget(ibsView);
@@ -29,11 +31,20 @@ IBsTab::IBsTab(QWidget* parent) : QWidget(parent)
     readIBs();
 }
 
+void IBsTab::acceptChange(const QString& ibName, const IBDesc& data)
+{
+    const QModelIndex& cur = ibsView->currentIndex();
+    ibsModel->itemFromIndex(cur)->setIcon(QIcon());
+    ibsModel->setData(cur, ibName, Qt::DisplayRole);
+    ibsModel->setData(cur, QVariant::fromValue(data), DescRole);
+}
+
 void IBsTab::loadIBs()
 {
     QSettings s;
 
     size_t size = s.beginReadArray("ibs");
+
     for (size_t i = 0; i < size; ++i) {
         s.setArrayIndex(i);
 
@@ -139,15 +150,12 @@ void IBsTab::showMenu(const QPoint& pos)
 
     const QModelIndex& pointedIdx = ibsView->indexAt(pos);
 
-    qDebug() << "HELLO";
-
     QAction* selectedAct;
     if (!pointedIdx.isValid()) {
         selectedAct = areaMenu.exec(globalPos);
 
         if (selectedAct) {
             if (selectedAct == addAct) {
-                qDebug() << "Add";
             }
         }
     }
@@ -156,11 +164,10 @@ void IBsTab::showMenu(const QPoint& pos)
     }
 }
 
-void IBsTab::fillDescWgt(const QModelIndex& midx)
+void IBsTab::fillDescWgt(const QModelIndex& cur, const QModelIndex&)
 {
-    ibsView->currentIndex();
-    const QString& ibName = midx.data().toString();
-    const IBDesc& data = midx.data(Qt::UserRole + 1).value<IBDesc>();
+    const QString& ibName = cur.data().toString();
+    const IBDesc& data = cur.data(DescRole).value<IBDesc>();
 
     descWgt->fill(ibName, data);
 }

@@ -8,6 +8,9 @@
 #include <QComboBox>
 #include <QPushButton>
 
+#include "toolkit.h"
+#include "commontab.h"
+
 
 struct IBDesc {
     bool isTmp;
@@ -22,21 +25,22 @@ Q_DECLARE_METATYPE(IBDesc)
 class IBDescWgt : public QWidget {
     Q_OBJECT
 
+    const CommonParam* comParam;
+
     QLineEdit* nameEd;
     QLineEdit* userEd;
     QLineEdit* passEd;
     QComboBox* dbsCombo;
 
-    QHBoxLayout* getField(const QString& name, QWidget* wgt);
     void save();
 
 public:
-    explicit IBDescWgt(QWidget* parent = nullptr);
+    explicit IBDescWgt(const CommonParam* comParam, QWidget* parent = nullptr);
 
     void fill(const QString& ibName, const IBDesc& data);
 
 signals:
-    void needSave(const IBDesc& data);
+    void descChanged(const QString& ibName, const IBDesc& data);
 };
 
 #endif // IBDESCWGT_H

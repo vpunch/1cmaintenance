@@ -3,8 +3,10 @@
 #include <QDebug>
 
 
-IBDescWgt::IBDescWgt(QWidget* parent) : QWidget(parent)
+IBDescWgt::IBDescWgt(const CommonParam* comParam, QWidget* parent) : QWidget(parent)
 {
+    this->comParam = comParam;
+
     nameEd = new QLineEdit;
 
     userEd = new QLineEdit;
@@ -25,26 +27,14 @@ IBDescWgt::IBDescWgt(QWidget* parent) : QWidget(parent)
     connect(saveBtn, &QPushButton::clicked, this, &IBDescWgt::save);
 
     // layout
-    QVBoxLayout* ibDescLay = new QVBoxLayout;
-    ibDescLay->addLayout(getField("Имя:", nameEd));
-    ibDescLay->addLayout(getField("Пользователь:", userEd));
-    ibDescLay->addLayout(getField("Пароль:", passEd));
-    ibDescLay->addLayout(getField("СУБД:", dbsCombo));
-    ibDescLay->addWidget(dbsWgts);
-    ibDescLay->addWidget(saveBtn);
-
-    this->setLayout(ibDescLay);
-}
-
-QHBoxLayout* IBDescWgt::getField(const QString& name, QWidget* wgt)
-{
-    QLabel* lbl = new QLabel(name);
-
-    QHBoxLayout* lay = new QHBoxLayout;
-    lay->addWidget(lbl);
-    lay->addWidget(wgt);
-
-    return lay;
+    auto lay = new QVBoxLayout;
+    lay->addLayout(rot::getField("Имя:", nameEd));
+    lay->addLayout(rot::getField("Пользователь:", userEd));
+    lay->addLayout(rot::getField("Пароль:", passEd));
+    lay->addLayout(rot::getField("СУБД:", dbsCombo));
+    lay->addWidget(dbsWgts);
+    lay->addWidget(saveBtn);
+    this->setLayout(lay);
 }
 
 void IBDescWgt::save()
@@ -56,7 +46,7 @@ void IBDescWgt::save()
         .dbs = dbsCombo->currentText()
     };
 
-    emit needSave(data);
+    emit descChanged(nameEd->text(), data);
 }
 
 void IBDescWgt::fill(const QString& ibName, const IBDesc& data)
@@ -65,4 +55,8 @@ void IBDescWgt::fill(const QString& ibName, const IBDesc& data)
     userEd->setText(data.user);
     passEd->setText(data.pass);
     dbsCombo->setCurrentText(data.dbs);
+
+    if (userEd->text().isEmpty()) {
+        userEd->setPlaceholderText(comParam->user);
+    }
 }

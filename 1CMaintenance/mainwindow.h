@@ -3,8 +3,11 @@
 
 #include <QMainWindow>
 #include <QTabWidget>
+#include <QTextEdit>
 
 #include "ibstab.h"
+#include "commontab.h"
+#include "taskstab.h"
 
 
 class MainWindow : public QMainWindow {
