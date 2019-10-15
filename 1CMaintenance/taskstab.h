@@ -4,9 +4,10 @@
 #include <QWidget>
 #include <QTreeView>
 #include <QWizard>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 #include <QStandardItemModel>
-#include <QVBoxLayout>
 
 
 class TasksTab : public QWidget {

@@ -7,7 +7,7 @@
 
 #include <QSettings>
 
-#include "toolkit.h"
+#include "global.h"
 
 
 struct CommonParam {
@@ -31,7 +31,6 @@ public:
     ~CommonTab();
 
     const CommonParam* getComParam() const {return &comParam;}
-
 };
 
 #endif // COMMONTAB_H

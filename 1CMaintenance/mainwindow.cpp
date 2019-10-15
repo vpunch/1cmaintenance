@@ -6,24 +6,19 @@
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
 {
-    CommonTab* comTab = new CommonTab;
+    auto ibsTab = new IBsTab(&stor);
 
-    //разрушение в обратном порядке
-    IBsTab* ibsTab = new IBsTab(comTab->getComParam());
+    auto comTab = new CommonTab;
 
-    TasksTab* tasksTab = new TasksTab;
+    auto tasksTab = new TasksTab;
 
-    QTextEdit* logTab = new QTextEdit;
+    auto logTab = new QTextEdit;
 
-    QTabWidget* cenWgt = new QTabWidget;
+    auto cenWgt = new QTabWidget;
     cenWgt->addTab(ibsTab, "Инф. базы");
     cenWgt->addTab(comTab, "Общее");
     cenWgt->addTab(tasksTab, "Задачи");
-    cenWgt->addTab(logTab, "Журнал");
+    cenWgt->addTab(logTab, "Журнал"); //информация о выполнении задач, прочие ошибки в другом
 
     this->setCentralWidget(cenWgt);
-}
-
-MainWindow::~MainWindow()
-{
 }

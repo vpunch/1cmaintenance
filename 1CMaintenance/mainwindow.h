@@ -8,14 +8,16 @@
 #include "ibstab.h"
 #include "commontab.h"
 #include "taskstab.h"
+#include "storage.h"
 
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
+    Storage stor;
+
 public:
     MainWindow(QWidget* parent = nullptr);
-    ~MainWindow();
 };
 
 #endif // MAINWINDOW_H

@@ -8,24 +8,15 @@
 #include <QComboBox>
 #include <QPushButton>
 
-#include "toolkit.h"
-#include "commontab.h"
+#include "global.h"
+#include "storage.h"
 
-
-struct IBDesc {
-    bool isTmp;
-    QString user;
-    QString pass;
-    QString dbs;
-};
-
-Q_DECLARE_METATYPE(IBDesc)
 
 // Info Base Description Widget
 class IBDescWgt : public QWidget {
     Q_OBJECT
 
-    const CommonParam* comParam;
+    Storage* stor;
 
     QLineEdit* nameEd;
     QLineEdit* userEd;
@@ -35,7 +26,7 @@ class IBDescWgt : public QWidget {
     void save();
 
 public:
-    explicit IBDescWgt(const CommonParam* comParam, QWidget* parent = nullptr);
+    explicit IBDescWgt(Storage* stor, QWidget* parent = nullptr);
 
     void fill(const QString& ibName, const IBDesc& data);
 

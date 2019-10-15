@@ -11,7 +11,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt5 COMPONENTS Widgets REQUIRED)
+find_package(Qt5 COMPONENTS Widgets Sql REQUIRED)
 
 add_executable(1CMaintenance
   main.cpp
@@ -23,11 +23,13 @@ add_executable(1CMaintenance
   ibdescwgt.h
   commontab.cpp
   commontab.h
-  toolkit.cpp
-  toolkit.h
+  global.cpp
+  global.h
   taskstab.cpp
   taskstab.h
-  icons.qrc
+  storage.cpp
+  storage.h
+  data.qrc
 )
 
-target_link_libraries(1CMaintenance PRIVATE Qt5::Widgets)
+target_link_libraries(1CMaintenance PRIVATE Qt5::Widgets Qt5::Sql)

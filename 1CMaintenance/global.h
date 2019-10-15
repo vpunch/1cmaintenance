@@ -1,10 +1,11 @@
-#ifndef TOOLKIT_H
-#define TOOLKIT_H
+#ifndef GLOBAL_H
+#define GLOBAL_H
+
+#include <QLabel>
+#include <QHBoxLayout>
 
 #include <QScreen>
 #include <QApplication>
-#include <QHBoxLayout>
-#include <QLabel>
 
 
 namespace rot {
@@ -12,4 +13,4 @@ namespace rot {
     QHBoxLayout* getField(const QString& name, QWidget* wgt);
 }
 
-#endif // TOOLKIT_H
+#endif // GLOBAL_H

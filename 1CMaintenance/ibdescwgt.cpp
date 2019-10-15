@@ -3,9 +3,9 @@
 #include <QDebug>
 
 
-IBDescWgt::IBDescWgt(const CommonParam* comParam, QWidget* parent) : QWidget(parent)
+IBDescWgt::IBDescWgt(Storage* stor, QWidget* parent) : QWidget(parent)
 {
-    this->comParam = comParam;
+    this->stor = stor;
 
     nameEd = new QLineEdit;
 
@@ -18,12 +18,12 @@ IBDescWgt::IBDescWgt(const CommonParam* comParam, QWidget* parent) : QWidget(par
     dbsCombo->addItem("1C");
     dbsCombo->addItem("PostgreSQL");
 
-    QWidget* ocWgt = new QWidget; //1(one)C widget
+    auto ocWgt = new QWidget; //1(one)C widget
 
-    QStackedWidget* dbsWgts = new QStackedWidget;
+    auto dbsWgts = new QStackedWidget;
     dbsWgts->addWidget(ocWgt);
 
-    QPushButton* saveBtn = new QPushButton("Сохранить");
+    auto saveBtn = new QPushButton("Сохранить");
     connect(saveBtn, &QPushButton::clicked, this, &IBDescWgt::save);
 
     // layout
@@ -39,10 +39,10 @@ IBDescWgt::IBDescWgt(const CommonParam* comParam, QWidget* parent) : QWidget(par
 
 void IBDescWgt::save()
 {
-    IBDesc data = {
-        .isTmp = false,
-        .user = userEd->text(),
-        .pass = passEd->text(),
+    IBDesc data {
+        .tmp = false,
+        .usr = userEd->text(),
+        .passwd = passEd->text(),
         .dbs = dbsCombo->currentText()
     };
 
@@ -52,11 +52,14 @@ void IBDescWgt::save()
 void IBDescWgt::fill(const QString& ibName, const IBDesc& data)
 {
     nameEd->setText(ibName);
-    userEd->setText(data.user);
-    passEd->setText(data.pass);
-    dbsCombo->setCurrentText(data.dbs);
 
-    if (userEd->text().isEmpty()) {
-        userEd->setPlaceholderText(comParam->user);
+    if (data.usr.isEmpty()) {
+        userEd->setPlaceholderText(stor->getParam("user"));
     }
+    else {
+        userEd->setText(data.usr);
+    }
+
+    passEd->setText(data.passwd);
+    dbsCombo->setCurrentText(data.dbs);
 }
