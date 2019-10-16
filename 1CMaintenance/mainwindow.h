@@ -9,6 +9,7 @@
 #include "commontab.h"
 #include "taskstab.h"
 #include "storage.h"
+#include "global.h"
 
 
 class MainWindow : public QMainWindow {

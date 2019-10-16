@@ -2,11 +2,13 @@
 #define IBDESCWGT_H
 
 #include <QLabel>
-#include <QStackedWidget>
 #include <QLineEdit>
 #include <QHBoxLayout>
 #include <QComboBox>
 #include <QPushButton>
+#include <QGroupBox>
+#include <QSpinBox>
+#include <QFormLayout>
 
 #include "global.h"
 #include "storage.h"
@@ -19,11 +21,19 @@ class IBDescWgt : public QWidget {
     Storage* stor;
 
     QLineEdit* nameEd;
-    QLineEdit* userEd;
+    QLineEdit* usrEd;
     QLineEdit* passEd;
     QComboBox* dbsCombo;
 
-    void save();
+    QGroupBox* ocGroup;
+    QLineEdit* pathEd;
+
+    QGroupBox* extGroup;
+    QLineEdit* hostEd;
+    QLineEdit* portEd;
+    QLineEdit* dbEd;
+    QLineEdit* extusrEd;
+    QLineEdit* extpassEd;
 
 public:
     explicit IBDescWgt(Storage* stor, QWidget* parent = nullptr);
@@ -32,6 +42,10 @@ public:
 
 signals:
     void descChanged(const QString& ibName, const IBDesc& data);
+
+protected slots:
+    void save();
+    void activateGroup(int dbsIdx);
 };
 
 #endif // IBDESCWGT_H

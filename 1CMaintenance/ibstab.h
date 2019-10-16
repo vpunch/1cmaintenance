@@ -1,11 +1,13 @@
 #ifndef IBSTAB_H
 #define IBSTAB_H
 
-#include <QWidget>
+#include <algorithm>
+
 #include <QVBoxLayout>
 #include <QSplitter>
 #include <QListView>
 #include <QMenu>
+#include <QScrollArea>
 
 #include <QFile>
 #include <QStandardItem>
@@ -20,20 +22,25 @@ class IBsTab : public QWidget {
 
     Storage* stor;
     QStandardItemModel* ibsModel;
+
     QListView* ibsView;
     IBDescWgt* descWgt;
 
+    /*
+     * Вспомогательные методы, используй updateIBs вместо них
+     */
     void readIBs();
     void loadIBs();
-
-    void showMenu(const QPoint& pos);
-    void fillDescWgt(const QModelIndex& cur, const QModelIndex&);
-    void acceptChange(const QString& ibName, const IBDesc& data);
 
 public:
     explicit IBsTab(Storage* stor, QWidget* parent = nullptr);
 
     void updateIBs();
+
+protected slots:
+    void showMenu(const QPoint& pos);
+    void fillDescWgt(const QModelIndex& cur, const QModelIndex&);
+    void acceptChange(const QString& ibName, const IBDesc& data);
 };
 
 #endif // IBSTAB_H

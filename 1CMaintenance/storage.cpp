@@ -1,12 +1,12 @@
 #include "storage.h"
 
-//#include <QDebug>
+#include <QDebug>
 
 
 Storage::Storage()
 {
-    //если будет создано несколько экземпляров, новое соединение заменит старое,
-    //инициализируются они одиноково
+    // при создании нескольких экземпляров, новое соединение просто заменит старое,
+    // так как инициализируются они одинаково
     QSqlDatabase conn = QSqlDatabase::addDatabase("QSQLITE");
     conn.setDatabaseName(
             QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/db");
@@ -42,17 +42,18 @@ IBs Storage::getIBs() {
     while (q.next()) {
         IBDesc desc {
             .tmp = false,
+            .port = q.value(6).toUInt(),
             .usr = q.value(1).toString(),
-            .passwd = q.value(2).toString(),
+            .pass = q.value(2).toString(),
             .dbs = q.value(3).toString(),
             .path = q.value(4).toString(),
             .host = q.value(5).toString(),
-            .port = q.value(6).toString(),
             .db = q.value(7).toString(),
-            .dbusr = q.value(8).toString()
+            .extusr = q.value(8).toString(),
+            .extpass = q.value(8).toString()
         };
 
-        ibs[q.value(0).toString()] = desc;
+        ibs.emplace_back(q.value(0).toString(), desc);
     }
 
     return ibs;
@@ -61,20 +62,21 @@ IBs Storage::getIBs() {
 QString Storage::fillQuStr(const QString &str, const IBDesc &desc)
 {
     return str.arg(desc.usr)
-            .arg(desc.passwd)
+            .arg(desc.pass)
             .arg(desc.dbs)
             .arg(desc.path)
             .arg(desc.host)
             .arg(desc.port)
             .arg(desc.db)
-            .arg(desc.dbusr);
+            .arg(desc.extusr)
+            .arg(desc.extpass);
 }
 
 bool Storage::saveIB(const QString& name, const IBDesc& desc, const QString& oldName)
 {
     QString quStr = R"(
             UPDATE InfoBase
-            SET name=:name, usr='%1', passwd='%2', dbs='%3', path='%4', host='%5', port='%6', db='%7', dbusr='%8'
+            SET name=:name, usr='%1', pass='%2', dbs='%3', path='%4', host='%5', port=%6, db='%7', extusr='%8', extpass='%9'
             WHERE name=:oldName
     )";
     quStr = fillQuStr(quStr, desc);
@@ -89,7 +91,7 @@ bool Storage::saveIB(const QString& name, const IBDesc& desc, const QString& old
 
         QString quStr = R"(
                 INSERT INTO InfoBase
-                VALUES (?, '%1', '%2', '%3', '%4', '%5', '%6', '%7', '%8')
+                VALUES (?, '%1', '%2', '%3', '%4', '%5', '%6', '%7', '%8', '%9')
         )";
         quStr = fillQuStr(quStr, desc);
 
@@ -135,9 +137,11 @@ QString Storage::getParam(const QString name)
         //журнал
     }
 
-    //вернет пустую строку, даже если вариант невалидный
-    q.next();
-    return q.value(0).toString();
+    QString res;
+    if (q.next()) {
+        res = q.value(0).toString();
+    }
+    return res;
 }
 
 QStringList Storage::getOps()

@@ -17,13 +17,20 @@ IBsTab::IBsTab(Storage* stor, QWidget* parent) : QWidget(parent)
     connect(ibsView, &QListView::customContextMenuRequested, this, &IBsTab::showMenu);
     connect(ibsView->selectionModel(), &QItemSelectionModel::currentChanged,
             this, &IBsTab::fillDescWgt);
+    ibsView->setMinimumWidth(200);
 
     descWgt = new IBDescWgt(stor);
     connect(descWgt, &IBDescWgt::descChanged, this, &IBsTab::acceptChange);
 
+    auto descArea = new QScrollArea;
+    descArea->setWidgetResizable(true);
+    descArea->setWidget(descWgt);
+
     auto splt = new QSplitter;
     splt->addWidget(ibsView);
-    splt->addWidget(descWgt);
+    splt->addWidget(descArea);
+    splt->setStretchFactor(0, 0);
+    splt->setStretchFactor(1, 1);
 
     auto lay = new QVBoxLayout;
     lay->addWidget(splt);
@@ -33,11 +40,19 @@ IBsTab::IBsTab(Storage* stor, QWidget* parent) : QWidget(parent)
 }
 
 void IBsTab::updateIBs()
-//вызывать этот метод, loadIBs и readIBs вспомогательные
 {
+    int r = ibsView->currentIndex().row();
+
     ibsModel->clear();
     loadIBs();
     readIBs();
+
+    r = std::min(r, ibsModel->rowCount() - 1);
+    if (r < 0) {
+        descWgt->setDisabled(true);
+    } else {
+        ibsView->setCurrentIndex(ibsModel->index(r, 0));
+    }
 }
 
 void IBsTab::acceptChange(const QString& ibName, const IBDesc& data)
@@ -87,7 +102,7 @@ void IBsTab::readIBs()
             if (ibsModel->findItems(group).isEmpty()) {
                 IBDesc desc {
                     .tmp = true,
-                    .dbs = "1C"
+                    .dbs = "1С"
                 };
 
                 auto item = new QStandardItem(QIcon(":/question.svg"), group);
@@ -138,4 +153,6 @@ void IBsTab::fillDescWgt(const QModelIndex& cur, const QModelIndex&)
     const IBDesc& data = cur.data(Qt::UserRole + 1).value<IBDesc>();
 
     descWgt->fill(ibName, data);
+
+    descWgt->setDisabled(false);
 }

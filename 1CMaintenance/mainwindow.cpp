@@ -6,6 +6,8 @@
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
 {
+    setMinimumSize(rot::point2px(500), rot::point2px(300));
+
     auto ibsTab = new IBsTab(&stor);
 
     auto comTab = new CommonTab;

@@ -1,13 +1,14 @@
 CREATE TABLE IF NOT EXISTS InfoBase (
 	name	TEXT	PRIMARY KEY,
 	usr		TEXT,
-	passwd	TEXT,
+	pass	TEXT,
 	dbs		TEXT	NOT NULL CHECK (dbs in ('1С', 'PostgreSQL')),
 	path	TEXT,
 	host	TEXT,
-	port	TEXT,
+	port	INTEGER	CHECK (port <= 49151 and port >= 1),
 	db		TEXT,
-	dbusr	TEXT
+	extusr	TEXT,
+	extpass	TEXT
 );
 
 CREATE TABLE IF NOT EXISTS Param (
