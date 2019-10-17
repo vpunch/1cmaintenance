@@ -1,25 +1,27 @@
 #ifndef COMMONTAB_H
 #define COMMONTAB_H
 
-#include <QWidget>
 #include <QLineEdit>
 #include <QPushButton>
-
-#include <QSettings>
+#include <QGroupBox>
 
 #include "global.h"
+#include "ibfield.h"
 
-
-struct CommonParam {
-    QString user;
-};
 
 class CommonTab : public QWidget {
     Q_OBJECT
 
-    CommonParam comParam;
+    IBField* usrEd;
+    IBField* passEd;
 
-    QLineEdit* userEd;
+    IBField* hostEd;
+    IBField* portEd;
+    IBField* dbEd;
+    IBField* extusrEd;
+    IBField* extpassEd;
+
+    IBField* storageEd;
 
     void loadParam();
     void saveParam();
@@ -28,9 +30,9 @@ class CommonTab : public QWidget {
 
 public:
     explicit CommonTab(QWidget* parent = nullptr);
-    ~CommonTab();
 
-    const CommonParam* getComParam() const {return &comParam;}
+signals:
+    void defaultChanged();
 };
 
 #endif // COMMONTAB_H

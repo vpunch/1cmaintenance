@@ -10,14 +10,13 @@ int rot::point2px(int count)
     return pixels;
 }
 
-QHBoxLayout* rot::getField(const QString& name, QWidget* wgt)
+QFormLayout* rot::getFormLay()
 {
-    QLabel* lbl = new QLabel(name);
-    lbl->setBuddy(wgt);
-
-    QHBoxLayout* lay = new QHBoxLayout;
-    lay->addWidget(lbl);
-    lay->addWidget(wgt, 1, Qt::AlignLeft);
+    auto lay = new QFormLayout;
+    lay->setRowWrapPolicy(QFormLayout::DontWrapRows);
+    lay->setFieldGrowthPolicy(QFormLayout::ExpandingFieldsGrow);
+    lay->setFormAlignment(Qt::AlignLeft | Qt::AlignTop);
+    lay->setLabelAlignment(Qt::AlignLeft);
 
     return lay;
 }

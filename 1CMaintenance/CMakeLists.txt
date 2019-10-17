@@ -27,6 +27,8 @@ add_executable(1CMaintenance
   global.h
   taskstab.cpp
   taskstab.h
+  ibfield.cpp
+  ibfield.h
   storage.cpp
   storage.h
   data.qrc

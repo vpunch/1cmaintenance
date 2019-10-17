@@ -3,42 +3,71 @@
 
 CommonTab::CommonTab(QWidget* parent) : QWidget(parent)
 {
-    userEd = new QLineEdit;
+    usrEd = new IBField;
+    passEd = new IBField(IBField::Pass);
+
+    auto baseLay = rot::getFormLay();
+    baseLay->addRow("Пользователь:", usrEd);
+    baseLay->addRow("Пароль:", passEd);
+
+    auto baseGroup = new QGroupBox("Информационная база");
+    baseGroup->setLayout(baseLay);
+
+
+    hostEd = new IBField;
+    portEd = new IBField(IBField::Port);
+    dbEd = new IBField;
+    extusrEd = new IBField;
+    extpassEd = new IBField(IBField::Pass);
+
+    auto extLay = rot::getFormLay();
+    extLay->addRow("Хост:", hostEd);
+    extLay->addRow("Порт:", portEd);
+    extLay->addRow("БД:", dbEd);
+    extLay->addRow("Пользователь:", extusrEd);
+    extLay->addRow("Пароль:", extpassEd);
+
+    auto extGroup = new QGroupBox("Внешняя СУБД");
+    extGroup->setLayout(extLay);
+
+
+    auto otherLay = rot::getFormLay();
+
+    storageEd = new IBField(IBField::Path);
+
+    otherLay->addRow("Хранилище:", storageEd);
+
 
     auto saveBtn = new QPushButton("Сохранить");
     connect(saveBtn, &QPushButton::clicked, this, &CommonTab::save);
 
+    // layout
     auto lay = new QVBoxLayout;
-    lay->addLayout(rot::getField("Пользователь:", userEd));
-    lay->addWidget(saveBtn);
+    lay->addWidget(baseGroup);
+    lay->addWidget(extGroup);
+    lay->addLayout(otherLay);
+    lay->addStretch(1);
+    lay->addWidget(saveBtn, 0, Qt::AlignLeft);
     this->setLayout(lay);
-
-    loadParam();
 }
 
 void CommonTab::save()
 {
-    comParam.user = userEd->text();
 }
 
 void CommonTab::saveParam()
 {
-    QSettings s;
 
-    s.setValue("user", comParam.user);
 
-    s.sync();
 }
 
 void CommonTab::loadParam()
 {
-    QSettings s;
 
-    comParam.user = s.value("user").toString();
-    userEd->setText(comParam.user);
 }
 
-CommonTab::~CommonTab()
-{
-    saveParam();
-}
+/*
+void Window::browse()
+
+
+*/

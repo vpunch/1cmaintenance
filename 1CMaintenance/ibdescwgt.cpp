@@ -8,14 +8,9 @@ IBDescWgt::IBDescWgt(Storage* stor, QWidget* parent) : QWidget(parent)
     this->stor = stor;
 
 //основная форма
-    nameEd = new QLineEdit;
-    usrEd = new QLineEdit;
-
-#define PASSED(name) \
-    name = new QLineEdit; \
-    name->setEchoMode(QLineEdit::PasswordEchoOnEdit);
-
-    PASSED(passEd)
+    nameEd = new IBField;
+    usrEd = new IBField;
+    passEd = new IBField(IBField::Path);
 
     dbsCombo = new QComboBox; //data base system
     dbsCombo->addItem("1С");
@@ -24,50 +19,39 @@ IBDescWgt::IBDescWgt(Storage* stor, QWidget* parent) : QWidget(parent)
     connect(dbsCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &IBDescWgt::activateGroup);
 
-    auto baseLay = new QFormLayout;
-    baseLay->setRowWrapPolicy(QFormLayout::DontWrapRows);
-    baseLay->setFieldGrowthPolicy(QFormLayout::ExpandingFieldsGrow);
-    baseLay->setFormAlignment(Qt::AlignLeft | Qt::AlignTop);
-    baseLay->setLabelAlignment(Qt::AlignLeft);
-
+    auto baseLay = rot::getFormLay();
     baseLay->addRow("Имя:", nameEd);
     baseLay->addRow("Пользователь:", usrEd);
     baseLay->addRow("Пароль:", passEd);
     baseLay->addRow("СУБД:", dbsCombo);
 
 //форма встроенной СУБД
-    pathEd = new QLineEdit;
+    pathEd = new IBField(IBField::Path);
 
-    auto ocLay = new QFormLayout;
+    auto ocLay = rot::getFormLay();
     ocLay->addRow("Путь:", pathEd);
 
-    ocGroup = new QGroupBox; //1(one)c Group
-    ocGroup->setTitle("1С");
+    ocGroup = new QGroupBox("1С"); //1(one)c Group
     ocGroup->setLayout(ocLay);
 
 //форма внешней СУБД
-    hostEd = new QLineEdit;
+    hostEd = new IBField;
+    portEd = new IBField(IBField::Port);
+    dbEd = new IBField;
+    extusrEd = new IBField;
+    extpassEd = new IBField(IBField::Pass);
 
-    portEd = new QLineEdit;
-    portEd->setValidator(new QIntValidator(1, 49151));
-
-    dbEd = new QLineEdit;
-    extusrEd = new QLineEdit;
-
-    PASSED(extpassEd)
-
-    auto extLay = new QFormLayout;
+    auto extLay = rot::getFormLay();
     extLay->addRow("Хост:", hostEd);
     extLay->addRow("Порт:", portEd);
     extLay->addRow("БД:", dbEd);
     extLay->addRow("Пользователь:", extusrEd);
     extLay->addRow("Пароль:", extpassEd);
 
-    extGroup = new QGroupBox; //external Group
-    extGroup->setTitle("Внешняя");
+    extGroup = new QGroupBox("Внешняя СУБД"); //external Group
     extGroup->setLayout(extLay);
 
-//
+
     auto saveBtn = new QPushButton("Сохранить");
     connect(saveBtn, &QPushButton::clicked, this, &IBDescWgt::save);
 
@@ -112,20 +96,9 @@ void IBDescWgt::save()
 
 void IBDescWgt::fill(const QString& ibName, const IBDesc& data)
 {
-    nameEd->setText(ibName);
-
-    if (data.usr.isEmpty()) {
-        usrEd->setPlaceholderText(stor->getParam("usr"));
-    }
-    else {
-        usrEd->setText(data.usr);
-    }
-
-    if (data.pass.isEmpty()) {
-    }
-    else {
-        passEd->setText(data.pass);
-    }
+    nameEd->setValue(ibName);
+    usrEd->setValue(data.usr, stor->getParam("usr"));
+    passEd->setValue(data.pass); //не отображается, но учитывается
 
     int dbsIdx = dbsCombo->findText(data.dbs);
     if (dbsIdx < 0) {
@@ -133,30 +106,11 @@ void IBDescWgt::fill(const QString& ibName, const IBDesc& data)
     }
     dbsCombo->setCurrentIndex(dbsIdx);
 
-    pathEd->setText(data.path);
+    pathEd->setValue(data.path);
 
-    if (data.host.isEmpty())
-        hostEd->setPlaceholderText(stor->getParam("host"));
-    else
-        hostEd->setText(data.host);
-
-    if (data.port == 0)
-        portEd->setPlaceholderText(stor->getParam("port"));
-    else
-        portEd->setText(QString::number(data.port));
-
-    if (data.db.isEmpty())
-        dbEd->setPlaceholderText(stor->getParam("db"));
-    else
-        dbEd->setText(data.db);
-
-    if (data.extusr.isEmpty())
-        extusrEd->setPlaceholderText(stor->getParam("extusr"));
-    else
-        extusrEd->setText(data.extusr);
-
-    if (data.extpass.isEmpty()) {
-    }
-    else
-        extpassEd->setText(data.extpass);
+    hostEd->setValue(data.host, stor->getParam("host"));
+    portEd->setValue(QString::number(data.port), stor->getParam("port"));
+    dbEd->setValue(data.db, stor->getParam("db"));
+    extusrEd->setValue(data.extusr, stor->getParam("extusr"));
+    extpassEd->setValue(data.extpass);
 }

@@ -1,16 +1,12 @@
 #ifndef IBDESCWGT_H
 #define IBDESCWGT_H
 
-#include <QLabel>
-#include <QLineEdit>
-#include <QHBoxLayout>
 #include <QComboBox>
 #include <QPushButton>
 #include <QGroupBox>
-#include <QSpinBox>
-#include <QFormLayout>
 
 #include "global.h"
+#include "ibfield.h"
 #include "storage.h"
 
 
@@ -20,20 +16,20 @@ class IBDescWgt : public QWidget {
 
     Storage* stor;
 
-    QLineEdit* nameEd;
-    QLineEdit* usrEd;
-    QLineEdit* passEd;
-    QComboBox* dbsCombo;
+    IBField* nameEd;
+    IBField* usrEd;
+    IBField* passEd;
+    QComboBox* dbsCombo; //database system
 
-    QGroupBox* ocGroup;
-    QLineEdit* pathEd;
+    QGroupBox* ocGroup; //1(one)c Group
+    IBField* pathEd;
 
-    QGroupBox* extGroup;
-    QLineEdit* hostEd;
-    QLineEdit* portEd;
-    QLineEdit* dbEd;
-    QLineEdit* extusrEd;
-    QLineEdit* extpassEd;
+    QGroupBox* extGroup; //external Group
+    IBField* hostEd;
+    IBField* portEd;
+    IBField* dbEd;
+    IBField* extusrEd;
+    IBField* extpassEd;
 
 public:
     explicit IBDescWgt(Storage* stor, QWidget* parent = nullptr);

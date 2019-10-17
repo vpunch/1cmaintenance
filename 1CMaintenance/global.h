@@ -2,7 +2,7 @@
 #define GLOBAL_H
 
 #include <QLabel>
-#include <QHBoxLayout>
+#include <QFormlayout>
 
 #include <QScreen>
 #include <QApplication>
@@ -10,7 +10,7 @@
 
 namespace rot {
     int point2px(int count);
-    QHBoxLayout* getField(const QString& name, QWidget* wgt);
+    QFormLayout* getFormLay();
 }
 
 #endif // GLOBAL_H
