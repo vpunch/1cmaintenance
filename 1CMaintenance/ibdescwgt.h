@@ -40,6 +40,7 @@ signals:
     void descChanged(const QString& ibName, const IBDesc& data);
 
 protected slots:
+    void loadCommon();
     void save();
     void activateGroup(int dbsIdx);
 };

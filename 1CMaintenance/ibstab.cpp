@@ -37,6 +37,7 @@ IBsTab::IBsTab(Storage* stor, QWidget* parent) : QWidget(parent)
     setLayout(lay);
 
     updateIBs();
+
 }
 
 void IBsTab::updateIBs()
@@ -46,6 +47,7 @@ void IBsTab::updateIBs()
     ibsModel->clear();
     loadIBs();
     readIBs();
+    descWgt->loadCommon();
 
     r = std::min(r, ibsModel->rowCount() - 1);
     if (r < 0) {
@@ -65,6 +67,7 @@ void IBsTab::acceptChange(const QString& ibName, const IBDesc& data)
     }
 
     updateIBs();
+
 }
 
 void IBsTab::loadIBs()
@@ -146,7 +149,6 @@ void IBsTab::showMenu(const QPoint& pos)
 
     }
 }
-
 void IBsTab::fillDescWgt(const QModelIndex& cur, const QModelIndex&)
 {
     const QString& ibName = cur.data().toString();

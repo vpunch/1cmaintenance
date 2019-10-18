@@ -6,7 +6,7 @@
 #include <QTextEdit>
 
 #include "ibstab.h"
-#include "commontab.h"
+#include "settingstab.h"
 #include "taskstab.h"
 #include "storage.h"
 #include "global.h"

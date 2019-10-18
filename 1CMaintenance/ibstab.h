@@ -36,11 +36,12 @@ public:
     explicit IBsTab(Storage* stor, QWidget* parent = nullptr);
 
     void updateIBs();
+    void acceptChange(const QString& ibName, const IBDesc& data);
 
 protected slots:
     void showMenu(const QPoint& pos);
     void fillDescWgt(const QModelIndex& cur, const QModelIndex&);
-    void acceptChange(const QString& ibName, const IBDesc& data);
+//    void acceptChange(const QString& ibName, const IBDesc& data);
 };
 
 #endif // IBSTAB_H

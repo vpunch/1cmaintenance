@@ -10,7 +10,7 @@ IBDescWgt::IBDescWgt(Storage* stor, QWidget* parent) : QWidget(parent)
 //основная форма
     nameEd = new IBField;
     usrEd = new IBField;
-    passEd = new IBField(IBField::Path);
+    passEd = new IBField(IBField::Pass);
 
     dbsCombo = new QComboBox; //data base system
     dbsCombo->addItem("1С");
@@ -48,7 +48,7 @@ IBDescWgt::IBDescWgt(Storage* stor, QWidget* parent) : QWidget(parent)
     extLay->addRow("Пользователь:", extusrEd);
     extLay->addRow("Пароль:", extpassEd);
 
-    extGroup = new QGroupBox("Внешняя СУБД"); //external Group
+    extGroup = new QGroupBox("Внешняя"); //external Group
     extGroup->setLayout(extLay);
 
 
@@ -78,20 +78,20 @@ void IBDescWgt::activateGroup(int dbsIdx)
 
 void IBDescWgt::save()
 {
-    IBDesc data {
+    IBDesc data = {
         .tmp = false,
-        .port = portEd->text().toUInt(),
-        .usr = usrEd->text(),
-        .pass = passEd->text(),
+        .usr = usrEd->value(),
+        .pass = passEd->value(),
         .dbs = dbsCombo->currentText(),
-        .path = pathEd->text(),
-        .host = hostEd->text(),
-        .db = dbEd->text(),
-        .extusr = extusrEd->text(),
-        .extpass = extpassEd->text()
+        .path = pathEd->value(),
+        .host = hostEd->value(),
+        .port = portEd->value(),
+        .db = dbEd->value(),
+        .extusr = extusrEd->value(),
+        .extpass = extpassEd->value()
     };
 
-    emit descChanged(nameEd->text(), data);
+    emit descChanged(nameEd->value(), data);
 }
 
 void IBDescWgt::fill(const QString& ibName, const IBDesc& data)
@@ -109,8 +109,19 @@ void IBDescWgt::fill(const QString& ibName, const IBDesc& data)
     pathEd->setValue(data.path);
 
     hostEd->setValue(data.host, stor->getParam("host"));
-    portEd->setValue(QString::number(data.port), stor->getParam("port"));
+    portEd->setValue(data.port, stor->getParam("port"));
     dbEd->setValue(data.db, stor->getParam("db"));
     extusrEd->setValue(data.extusr, stor->getParam("extusr"));
     extpassEd->setValue(data.extpass);
+}
+
+void IBDescWgt::loadCommon()
+{
+    usrEd->setValue(stor->getParam("usr"));
+    passEd->setValue(stor->getParam("pass"));
+
+    hostEd->setValue(stor->getParam("host"));
+    portEd->setValue(stor->getParam("port"));
+    extusrEd->setValue(stor->getParam("extusr"));
+    extpassEd->setValue(stor->getParam("extpass"));
 }

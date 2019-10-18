@@ -21,8 +21,8 @@ add_executable(1CMaintenance
   ibstab.h
   ibdescwgt.cpp
   ibdescwgt.h
-  commontab.cpp
-  commontab.h
+  settingstab.cpp
+  settingstab.h
   global.cpp
   global.h
   taskstab.cpp

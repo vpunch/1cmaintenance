@@ -2,7 +2,6 @@
 #define IBFIELD_H
 
 #include <QLineEdit>
-#include <QPushButton>
 #include <QIntValidator>
 #include <QToolButton>
 #include <QAction>
@@ -21,7 +20,7 @@ public:
     IBField(Type type = Simple, QWidget* parent = nullptr);
 
     void setValue(const QString& val, const QString& defval = QString());
-    QString text();
+    QString value();
 
 private:
     Type type;
@@ -29,7 +28,7 @@ private:
     QLineEdit* le;
 
 private slots:
-    void browse();
+    void getPath();
 };
 
 #endif // IBFIELD_H

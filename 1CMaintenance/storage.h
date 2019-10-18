@@ -16,8 +16,7 @@
 
 struct IBDesc {
     bool tmp;
-    uint port;
-    QString usr, pass, dbs, path, host, db, extusr, extpass;
+    QString usr, pass, dbs, path, host, port, db, extusr, extpass;
 };
 
 Q_DECLARE_METATYPE(IBDesc)
@@ -32,10 +31,10 @@ public:
 /*
  * Обертка над встраиваемой базой данных.
  * Если возникает ошибка извлечения данных, клиент получает пустой ответ или отрицание.
- * Сама ошибка фиксируется в специальном журнале
+ * Сама ошибка фиксируется в специальном журнале.
  */
 class Storage {
-    QString fillQuStr(const QString& str, const IBDesc& desc);
+    void bindIB(QSqlQuery& q, const QString& name, const IBDesc& desc);
 
 public:
     Storage();
@@ -46,10 +45,10 @@ public:
             const IBDesc& desc,
             const QString& oldName = QString());
 
-    bool setParam(const QString name, const QString& value);
-    QString getParam(const QString name);
+    bool setParam(const QString& name, const QString& value);
+    QString getParam(const QString& name);
 
     QStringList getOps();
 };
 
-#endif // STORAGE_H
+#endif //STORAGE_H

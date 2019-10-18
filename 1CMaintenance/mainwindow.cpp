@@ -10,7 +10,8 @@ MainWindow::MainWindow(QWidget* parent)
 
     auto ibsTab = new IBsTab(&stor);
 
-    auto comTab = new CommonTab;
+    auto settingsTab = new SettingsTab(&stor);
+    connect(settingsTab, &SettingsTab::commonChanged, ibsTab, &IBsTab::acceptChange);
 
     auto tasksTab = new TasksTab;
 
@@ -18,7 +19,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     auto cenWgt = new QTabWidget;
     cenWgt->addTab(ibsTab, "Инф. базы");
-    cenWgt->addTab(comTab, "Общее");
+    cenWgt->addTab(settingsTab, "Настройки");
     cenWgt->addTab(tasksTab, "Задачи");
     cenWgt->addTab(logTab, "Журнал"); //информация о выполнении задач, прочие ошибки в другом
 

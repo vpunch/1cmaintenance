@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS InfoBase (
 	dbs		TEXT	NOT NULL CHECK (dbs in ('1С', 'PostgreSQL')),
 	path	TEXT,
 	host	TEXT,
-	port	INTEGER	CHECK (port <= 49151 and port >= 1),
+	port	INTEGER	CHECK (port <= 65535 and port >= 1),
 	db		TEXT,
 	extusr	TEXT,
 	extpass	TEXT
