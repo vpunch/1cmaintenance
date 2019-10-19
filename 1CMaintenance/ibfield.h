@@ -2,11 +2,12 @@
 #define IBFIELD_H
 
 #include <QLineEdit>
-#include <QIntValidator>
 #include <QToolButton>
+#include <QFileDialog>
+
+#include <QIntValidator>
 #include <QAction>
 #include <QDir>
-#include <QFileDialog>
 
 #include "global.h"
 
@@ -19,7 +20,8 @@ public:
 
     IBField(Type type = Simple, QWidget* parent = nullptr);
 
-    void setValue(const QString& val, const QString& defval = QString());
+    void setValue(const QString& val);
+    void setDefaultValue(const QString& val);
     QString value();
 
 private:
@@ -31,4 +33,4 @@ private slots:
     void getPath();
 };
 
-#endif // IBFIELD_H
+#endif //IBFIELD_H

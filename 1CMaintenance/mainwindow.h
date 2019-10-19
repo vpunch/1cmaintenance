@@ -21,4 +21,4 @@ public:
     MainWindow(QWidget* parent = nullptr);
 };
 
-#endif // MAINWINDOW_H
+#endif //MAINWINDOW_H

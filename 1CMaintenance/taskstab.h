@@ -1,7 +1,6 @@
 #ifndef TASKSTAB_H
 #define TASKSTAB_H
 
-#include <QWidget>
 #include <QTreeView>
 #include <QWizard>
 #include <QPushButton>
@@ -17,4 +16,4 @@ public:
     TasksTab(QWidget* parent = nullptr);
 };
 
-#endif // TASKSTAB_H
+#endif //TASKSTAB_H

@@ -38,12 +38,12 @@ class Storage {
 
 public:
     Storage();
-    ~Storage();
 
     IBs getIBs();
     bool saveIB(const QString& name,
             const IBDesc& desc,
             const QString& oldName = QString());
+    bool deleteIB(const QString& name);
 
     bool setParam(const QString& name, const QString& value);
     QString getParam(const QString& name);

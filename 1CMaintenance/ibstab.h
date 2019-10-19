@@ -3,15 +3,13 @@
 
 #include <algorithm>
 
-#include <QVBoxLayout>
 #include <QSplitter>
 #include <QListView>
 #include <QMenu>
 #include <QScrollArea>
 
-#include <QFile>
+#include <QVBoxLayout>
 #include <QStandardItem>
-#include <QTextStream>
 
 #include "ibdescwgt.h"
 #include "storage.h"
@@ -32,16 +30,18 @@ class IBsTab : public QWidget {
     void readIBs();
     void loadIBs();
 
+private slots:
+    void showMenu(const QPoint& pos);
+    void fillDescWgt(const QModelIndex& cur, const QModelIndex&);
+    void acceptChange(const QString& ibName, const IBDesc& data);
+
 public:
     explicit IBsTab(Storage* stor, QWidget* parent = nullptr);
 
     void updateIBs();
-    void acceptChange(const QString& ibName, const IBDesc& data);
 
-protected slots:
-    void showMenu(const QPoint& pos);
-    void fillDescWgt(const QModelIndex& cur, const QModelIndex&);
-//    void acceptChange(const QString& ibName, const IBDesc& data);
+public slots:
+    void updateCommon();
 };
 
-#endif // IBSTAB_H
+#endif //IBSTAB_H

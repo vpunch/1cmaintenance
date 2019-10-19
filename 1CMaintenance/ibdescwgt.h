@@ -10,7 +10,7 @@
 #include "storage.h"
 
 
-// Info Base Description Widget
+//Info Base Description Widget
 class IBDescWgt : public QWidget {
     Q_OBJECT
 
@@ -31,18 +31,21 @@ class IBDescWgt : public QWidget {
     IBField* extusrEd;
     IBField* extpassEd;
 
+private slots:
+    void save();
+    void activateGroup(int dbsIdx);
+
 public:
     explicit IBDescWgt(Storage* stor, QWidget* parent = nullptr);
 
     void fill(const QString& ibName, const IBDesc& data);
+    QString currentDBS(bool external = false);
+
+public slots:
+    void loadCommon();
 
 signals:
     void descChanged(const QString& ibName, const IBDesc& data);
-
-protected slots:
-    void loadCommon();
-    void save();
-    void activateGroup(int dbsIdx);
 };
 
-#endif // IBDESCWGT_H
+#endif //IBDESCWGT_H

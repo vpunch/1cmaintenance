@@ -11,7 +11,11 @@ MainWindow::MainWindow(QWidget* parent)
     auto ibsTab = new IBsTab(&stor);
 
     auto settingsTab = new SettingsTab(&stor);
-    connect(settingsTab, &SettingsTab::commonChanged, ibsTab, &IBsTab::acceptChange);
+    connect(settingsTab, &SettingsTab::commonChanged, ibsTab, &IBsTab::updateCommon);
+
+    auto settingsArea = new QScrollArea;
+    settingsArea->setWidgetResizable(true);
+    settingsArea->setWidget(settingsTab);
 
     auto tasksTab = new TasksTab;
 
@@ -19,7 +23,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     auto cenWgt = new QTabWidget;
     cenWgt->addTab(ibsTab, "Инф. базы");
-    cenWgt->addTab(settingsTab, "Настройки");
+    cenWgt->addTab(settingsArea, "Настройки");
     cenWgt->addTab(tasksTab, "Задачи");
     cenWgt->addTab(logTab, "Журнал"); //информация о выполнении задач, прочие ошибки в другом
 

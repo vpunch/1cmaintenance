@@ -109,6 +109,16 @@ bool Storage::saveIB(const QString& name, const IBDesc& desc, const QString& old
     return q.isActive();
 }
 
+bool Storage::deleteIB(const QString& name)
+{
+    QSqlQuery q(QString("DELETE FROM InfoBase WHERE name = '%1'").arg(name));
+
+    if (!q.isActive()) {
+    }
+
+    return q.isActive();
+}
+
 bool Storage::setParam(const QString& name, const QString& value)
 {
     QString quStr = QString("UPDATE Param SET value='%1' WHERE name='%2'")
@@ -160,8 +170,4 @@ QStringList Storage::getOps()
         res << q.value(0).toString();
 
     return res;
-}
-
-Storage::~Storage()
-{
 }

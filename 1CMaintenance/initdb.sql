@@ -1,31 +1,31 @@
 CREATE TABLE IF NOT EXISTS InfoBase (
-	name	TEXT	PRIMARY KEY,
+	name	TEXT	NOT NULL PRIMARY KEY,
 	usr		TEXT,
 	pass	TEXT,
 	dbs		TEXT	NOT NULL CHECK (dbs in ('1С', 'PostgreSQL')),
 	path	TEXT,
 	host	TEXT,
-	port	INTEGER	CHECK (port <= 65535 and port >= 1),
+	port	INTEGER	CHECK (port < 65536 and port > 0),
 	db		TEXT,
 	extusr	TEXT,
 	extpass	TEXT
 );
 
 CREATE TABLE IF NOT EXISTS Param (
-	name	TEXT	PRIMARY KEY,
+	name	TEXT	NOT NULL PRIMARY KEY,
 	value	TEXT
 );
 
 CREATE TABLE IF NOT EXISTS Op (
-	name	TEXT	PRIMARY KEY
+	name	TEXT	NOT NULL PRIMARY KEY
 );
 
 CREATE TABLE IF NOT EXISTS Task (
-	id		INTEGER	PRIMARY KEY,
 	time	TEXT	NOT NULL,
 	ib		TEXT,
 	op		TEXT,
 	taskid	TEXT	NOT NULL,
+	PRIMARY KEY (ib, taskid),
 	FOREIGN KEY (ib) REFERENCES InfoBase (name),
 	FOREIGN KEY (op) REFERENCES Op (name)
 );

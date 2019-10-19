@@ -37,7 +37,11 @@ IBsTab::IBsTab(Storage* stor, QWidget* parent) : QWidget(parent)
     setLayout(lay);
 
     updateIBs();
+}
 
+void IBsTab::updateCommon()
+{
+    descWgt->loadCommon();
 }
 
 void IBsTab::updateIBs()
@@ -47,7 +51,6 @@ void IBsTab::updateIBs()
     ibsModel->clear();
     loadIBs();
     readIBs();
-    descWgt->loadCommon();
 
     r = std::min(r, ibsModel->rowCount() - 1);
     if (r < 0) {
@@ -67,7 +70,6 @@ void IBsTab::acceptChange(const QString& ibName, const IBDesc& data)
     }
 
     updateIBs();
-
 }
 
 void IBsTab::loadIBs()
@@ -83,72 +85,83 @@ void IBsTab::loadIBs()
 
 void IBsTab::readIBs()
 {
-#ifdef Q_OS_WIN
-    const QString& roaming = qEnvironmentVariable("APPDATA");
-    QString fname = roaming + "\\1C\\1CEStartt\\ibases.v8i";
-#endif
+    rot::IBasesT ibases = rot::ibases();
 
-    QFile file(fname);
-    file.open(QFile::ReadOnly | QFile::Text);
+    for (auto group : ibases) {
+        for (auto pair : group.second) {
+            if (pair.first == "Connect") {
+                if (ibsModel->findItems(group.first).isEmpty()) {
+                    IBDesc desc = {
+                        .tmp = true
+                    };
 
-    QTextStream text(&file);
-    text.setCodec("UTF-8");
+                    QStringList typeSection = pair.second.section(';', 0, 0).split('=');
+                    if (typeSection[0] == "File") {
+                        desc.dbs = "1С";
+                        desc.path = typeSection[1].replace('"', "");
+                    }
+                    else { //typeSection[0] == "Srvr"
+                        desc.dbs = descWgt->currentDBS(true);
+                    }
 
-    QString group;
-    while (!text.atEnd()) {
-        const QString& line = text.readLine().trimmed();
+                    auto item = new QStandardItem(QIcon(":/question.svg"), group.first);
+                    item->setData(QVariant::fromValue<IBDesc>(desc));
 
-        if (line.startsWith('[')) {
-            int len = line.indexOf(']') - 1;
-            group = line.mid(1, len);
-
-            if (ibsModel->findItems(group).isEmpty()) {
-                IBDesc desc {
-                    .tmp = true,
-                    .dbs = "1С"
-                };
-
-                auto item = new QStandardItem(QIcon(":/question.svg"), group);
-                item->setData(QVariant::fromValue<IBDesc>(desc));
-
-                ibsModel->appendRow(item);
+                    ibsModel->appendRow(item);
+                }
             }
-
-            continue;
-        }
-
-        QStringList pair = line.split("=");
-        if (pair.size() > 1) {
         }
     }
 }
 
 void IBsTab::showMenu(const QPoint& pos)
 {
-    QPoint globalPos = ibsView->mapToGlobal(pos);
-
     QMenu areaMenu;
     QAction* addAct = areaMenu.addAction(QIcon(":/plus.svg"), "Добавить");
 
-    //QMenu itemMenu;
-    //QAction* removeAct = menuForItem.addAction("Удалить");
-    //сохранить
+    QMenu itemMenu;
+    QAction* removeAct = itemMenu.addAction("Удалить");
 
+    QPoint globalPos = ibsView->mapToGlobal(pos);
     const QModelIndex& pointedIdx = ibsView->indexAt(pos);
 
     QAction* selectedAct;
     if (!pointedIdx.isValid()) {
-        selectedAct = areaMenu.exec(globalPos);
+         selectedAct = areaMenu.exec(globalPos);
 
         if (selectedAct) {
             if (selectedAct == addAct) {
+                QString baseName = "Информационная база";
+
+                QString name = baseName;
+
+                int i = 0;
+                while (!ibsModel->findItems(name).isEmpty()) {
+                    name = baseName + " #" + QString::number(++i);
+                }
+
+                IBDesc desc = {
+                    .tmp = false,
+                    .dbs = descWgt->currentDBS(),
+                };
+
+                stor->saveIB(name, desc);
+                updateIBs();
             }
         }
     }
     else {
+        selectedAct = itemMenu.exec(globalPos);
 
+        if (selectedAct) {
+            if (selectedAct == removeAct) {
+                stor->deleteIB(pointedIdx.data().toString());
+                updateIBs();
+            }
+        }
     }
 }
+
 void IBsTab::fillDescWgt(const QModelIndex& cur, const QModelIndex&)
 {
     const QString& ibName = cur.data().toString();

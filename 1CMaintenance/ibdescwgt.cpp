@@ -7,55 +7,54 @@ IBDescWgt::IBDescWgt(Storage* stor, QWidget* parent) : QWidget(parent)
 {
     this->stor = stor;
 
-//основная форма
+
     nameEd = new IBField;
     usrEd = new IBField;
     passEd = new IBField(IBField::Pass);
 
-    dbsCombo = new QComboBox; //data base system
+    dbsCombo = new QComboBox;
     dbsCombo->addItem("1С");
     dbsCombo->addItem("PostgreSQL");
     dbsCombo->setCurrentIndex(-1);
     connect(dbsCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &IBDescWgt::activateGroup);
 
-    auto baseLay = rot::getFormLay();
+    auto baseLay = rot::formLay(); //основная форма
     baseLay->addRow("Имя:", nameEd);
     baseLay->addRow("Пользователь:", usrEd);
     baseLay->addRow("Пароль:", passEd);
     baseLay->addRow("СУБД:", dbsCombo);
 
-//форма встроенной СУБД
+
     pathEd = new IBField(IBField::Path);
 
-    auto ocLay = rot::getFormLay();
+    auto ocLay = rot::formLay(); //форма встроенной СУБД
     ocLay->addRow("Путь:", pathEd);
 
-    ocGroup = new QGroupBox("1С"); //1(one)c Group
+    ocGroup = new QGroupBox("1С");
     ocGroup->setLayout(ocLay);
 
-//форма внешней СУБД
+
     hostEd = new IBField;
     portEd = new IBField(IBField::Port);
     dbEd = new IBField;
     extusrEd = new IBField;
     extpassEd = new IBField(IBField::Pass);
 
-    auto extLay = rot::getFormLay();
+    auto extLay = rot::formLay(); //форма внешней СУБД
     extLay->addRow("Хост:", hostEd);
     extLay->addRow("Порт:", portEd);
     extLay->addRow("БД:", dbEd);
     extLay->addRow("Пользователь:", extusrEd);
     extLay->addRow("Пароль:", extpassEd);
 
-    extGroup = new QGroupBox("Внешняя"); //external Group
+    extGroup = new QGroupBox("Внешняя");
     extGroup->setLayout(extLay);
 
 
     auto saveBtn = new QPushButton("Сохранить");
     connect(saveBtn, &QPushButton::clicked, this, &IBDescWgt::save);
 
-    // layout
     auto lay = new QVBoxLayout;
     lay->addLayout(baseLay);
     lay->addWidget(ocGroup);
@@ -63,6 +62,9 @@ IBDescWgt::IBDescWgt(Storage* stor, QWidget* parent) : QWidget(parent)
     lay->addStretch(1);
     lay->addWidget(saveBtn, 0, Qt::AlignLeft);
     this->setLayout(lay);
+
+
+    loadCommon();
 }
 
 void IBDescWgt::activateGroup(int dbsIdx)
@@ -94,11 +96,22 @@ void IBDescWgt::save()
     emit descChanged(nameEd->value(), data);
 }
 
+QString IBDescWgt::currentDBS(bool external)
+{
+    if (dbsCombo->currentIndex() < 0)
+        return dbsCombo->itemText(0);
+
+    if (external && dbsCombo->currentIndex() == 0)
+        return dbsCombo->itemText(1);
+
+    return dbsCombo->currentText();
+}
+
 void IBDescWgt::fill(const QString& ibName, const IBDesc& data)
 {
     nameEd->setValue(ibName);
-    usrEd->setValue(data.usr, stor->getParam("usr"));
-    passEd->setValue(data.pass); //не отображается, но учитывается
+    usrEd->setValue(data.usr);
+    passEd->setValue(data.pass);
 
     int dbsIdx = dbsCombo->findText(data.dbs);
     if (dbsIdx < 0) {
@@ -108,20 +121,20 @@ void IBDescWgt::fill(const QString& ibName, const IBDesc& data)
 
     pathEd->setValue(data.path);
 
-    hostEd->setValue(data.host, stor->getParam("host"));
-    portEd->setValue(data.port, stor->getParam("port"));
-    dbEd->setValue(data.db, stor->getParam("db"));
-    extusrEd->setValue(data.extusr, stor->getParam("extusr"));
+    hostEd->setValue(data.host);
+    portEd->setValue(data.port);
+    dbEd->setValue(data.db);
+    extusrEd->setValue(data.extusr);
     extpassEd->setValue(data.extpass);
 }
 
 void IBDescWgt::loadCommon()
 {
-    usrEd->setValue(stor->getParam("usr"));
-    passEd->setValue(stor->getParam("pass"));
+    usrEd->setDefaultValue(stor->getParam("usr"));
+    passEd->setDefaultValue(stor->getParam("pass"));
 
-    hostEd->setValue(stor->getParam("host"));
-    portEd->setValue(stor->getParam("port"));
-    extusrEd->setValue(stor->getParam("extusr"));
-    extpassEd->setValue(stor->getParam("extpass"));
+    hostEd->setDefaultValue(stor->getParam("host"));
+    portEd->setDefaultValue(stor->getParam("port"));
+    extusrEd->setDefaultValue(stor->getParam("extusr"));
+    extpassEd->setDefaultValue(stor->getParam("extpass"));
 }

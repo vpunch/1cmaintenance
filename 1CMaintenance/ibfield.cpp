@@ -28,7 +28,7 @@ IBField::IBField(Type type, QWidget* parent) : QWidget(parent)
         act->setIconText("...");
         connect(act, &QAction::triggered, this, &IBField::getPath);
 
-        QToolButton* btn = new QToolButton();
+        auto btn = new QToolButton();
         btn->setDefaultAction(act);
         lay->addWidget(btn);
         break;
@@ -41,19 +41,21 @@ IBField::IBField(Type type, QWidget* parent) : QWidget(parent)
     setLayout(lay);
 }
 
-void IBField::setValue(const QString& val, const QString& defval)
+void IBField::setValue(const QString& val)
+{
+    le->setText(val);
+}
+
+void IBField::setDefaultValue(const QString& val)
 {
     if (type == Pass)
-        le->setPlaceholderText(QString(L'●', defval.size()));
+        le->setPlaceholderText(QString(val.size(), L'●'));
     else
-        le->setPlaceholderText(defval);
-
-    le->setText(val);
+        le->setPlaceholderText(val);
 }
 
 QString IBField::value()
 {
-    qDebug() << le->text().isNull();
     return le->text();
 }
 
