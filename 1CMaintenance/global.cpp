@@ -25,7 +25,7 @@ QFormLayout* rot::formLay()
 
 rot::IBasesT rot::ibases()
 {
-    std::map<QString, std::vector<std::pair<QString, QString>>> ibases;
+    IBasesT ibases;
 
 #ifdef Q_OS_WIN
     const QString& roaming = qEnvironmentVariable("APPDATA");

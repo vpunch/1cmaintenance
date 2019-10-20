@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget* parent)
     settingsArea->setWidgetResizable(true);
     settingsArea->setWidget(settingsTab);
 
-    auto tasksTab = new TasksTab;
+    auto tasksTab = new TasksTab(&stor);
 
     auto logTab = new QTextEdit;
 

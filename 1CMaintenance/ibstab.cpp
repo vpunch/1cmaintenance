@@ -3,18 +3,15 @@
 #include <QDebug>
 
 
-IBsTab::IBsTab(Storage* stor, QWidget* parent) : QWidget(parent)
+IBsTab::IBsTab(Storage* stor, QWidget* parent)
+    : ListWgt(new QListView, parent)
 {
     this->stor = stor;
 
     ibsModel = new QStandardItemModel(this);
 
-    ibsView = new QListView;
-    ibsView->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
-    ibsView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ibsView = (QListView*)listView;
     ibsView->setModel(ibsModel);
-    ibsView->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ibsView, &QListView::customContextMenuRequested, this, &IBsTab::showMenu);
     connect(ibsView->selectionModel(), &QItemSelectionModel::currentChanged,
             this, &IBsTab::fillDescWgt);
     ibsView->setMinimumWidth(200);
@@ -114,52 +111,29 @@ void IBsTab::readIBs()
     }
 }
 
-void IBsTab::showMenu(const QPoint& pos)
+void IBsTab::add()
 {
-    QMenu areaMenu;
-    QAction* addAct = areaMenu.addAction(QIcon(":/plus.svg"), "Добавить");
+    QString baseName = "Информационная база";
+    QString name = baseName;
 
-    QMenu itemMenu;
-    QAction* removeAct = itemMenu.addAction("Удалить");
-
-    QPoint globalPos = ibsView->mapToGlobal(pos);
-    const QModelIndex& pointedIdx = ibsView->indexAt(pos);
-
-    QAction* selectedAct;
-    if (!pointedIdx.isValid()) {
-         selectedAct = areaMenu.exec(globalPos);
-
-        if (selectedAct) {
-            if (selectedAct == addAct) {
-                QString baseName = "Информационная база";
-
-                QString name = baseName;
-
-                int i = 0;
-                while (!ibsModel->findItems(name).isEmpty()) {
-                    name = baseName + " #" + QString::number(++i);
-                }
-
-                IBDesc desc = {
-                    .tmp = false,
-                    .dbs = descWgt->currentDBS(),
-                };
-
-                stor->saveIB(name, desc);
-                updateIBs();
-            }
-        }
+    int i = 0;
+    while (!ibsModel->findItems(name).isEmpty()) {
+        name = baseName + " #" + QString::number(++i);
     }
-    else {
-        selectedAct = itemMenu.exec(globalPos);
 
-        if (selectedAct) {
-            if (selectedAct == removeAct) {
-                stor->deleteIB(pointedIdx.data().toString());
-                updateIBs();
-            }
-        }
-    }
+    IBDesc desc = {
+        .tmp = false,
+        .dbs = descWgt->currentDBS(),
+    };
+
+    stor->saveIB(name, desc);
+    updateIBs();
+}
+
+void IBsTab::remove()
+{
+    stor->deleteIB(ibsView->currentIndex().data().toString());
+    updateIBs();
 }
 
 void IBsTab::fillDescWgt(const QModelIndex& cur, const QModelIndex&)
