@@ -12,7 +12,15 @@
 #include <QFile>
 #include <QStandardPaths>
 #include <QTextStream>
+#include <QUuid>
 
+
+struct TaskDesc {
+    QStringList ibs;
+    QStringList ops;
+    QString time;
+    QUuid id;
+};
 
 struct IBDesc {
     bool tmp;
@@ -49,6 +57,9 @@ public:
     QString getParam(const QString& name);
 
     QStringList getOps();
+
+    bool saveTask(const TaskDesc& task);
+    bool deleteTask(const QString& uuid);
 };
 
 #endif //STORAGE_H

@@ -111,7 +111,12 @@ bool Storage::saveIB(const QString& name, const IBDesc& desc, const QString& old
 
 bool Storage::deleteIB(const QString& name)
 {
-    QSqlQuery q(QString("DELETE FROM InfoBase WHERE name = '%1'").arg(name));
+    QSqlQuery q;
+    //q.exec(QString("DELETE FROM Task WHERE ib = '%1'").arg(name));
+
+    //q.clear();
+
+    q.exec(QString("DELETE FROM InfoBase WHERE name = '%1'").arg(name));
 
     if (!q.isActive()) {
     }
@@ -170,4 +175,14 @@ QStringList Storage::getOps()
         res << q.value(0).toString();
 
     return res;
+}
+
+bool Storage::saveTask(const TaskDesc& task)
+{
+
+}
+
+bool Storage::deleteTask(const QString& uuid)
+{
+
 }

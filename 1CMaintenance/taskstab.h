@@ -2,21 +2,14 @@
 #define TASKSTAB_H
 
 #include <QTreeView>
-#include <QWizard>
 #include <QPushButton>
-#include <QCheckBox>
-#include <QTimeEdit>
-#include <QLabel>
-#include <QComboBox>
-#include <QStackedWidget>
 
 #include <QVBoxLayout>
 #include <QStandardItemModel>
-#include <QGridLayout>
 
 #include "listwgt.h"
 #include "storage.h"
-#include "global.h"
+#include "taskwizard.h"
 
 
 class TasksTab : public ListWgt {
@@ -28,6 +21,8 @@ class TasksTab : public ListWgt {
 
     void add() override;
     void remove() override;
+
+    void updateTasks();
 
 public:
     TasksTab(Storage* stor, QWidget* parent = nullptr);

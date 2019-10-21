@@ -31,6 +31,8 @@ add_executable(1CMaintenance
   ibfield.h
   listwgt.cpp
   listwgt.h
+  taskwizard.cpp
+  taskwizard.h
   storage.cpp
   storage.h
   data.qrc
