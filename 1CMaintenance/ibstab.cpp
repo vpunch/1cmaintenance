@@ -132,7 +132,7 @@ void IBsTab::add()
 
 void IBsTab::remove()
 {
-    stor->deleteIB(ibsView->currentIndex().data().toString());
+    stor->removeIB(ibsView->currentIndex().data().toString());
     updateIBs();
 }
 

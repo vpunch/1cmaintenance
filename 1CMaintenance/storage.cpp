@@ -109,14 +109,15 @@ bool Storage::saveIB(const QString& name, const IBDesc& desc, const QString& old
     return q.isActive();
 }
 
-bool Storage::deleteIB(const QString& name)
+bool Storage::removeIB(const QString& name)
 {
     QSqlQuery q;
-    //q.exec(QString("DELETE FROM Task WHERE ib = '%1'").arg(name));
+    q.exec(QString("DELETE FROM Task WHERE ib = '%1'").arg(name));
 
-    //q.clear();
-
-    q.exec(QString("DELETE FROM InfoBase WHERE name = '%1'").arg(name));
+    if (q.isActive()) {
+        q.clear();
+        q.exec(QString("DELETE FROM InfoBase WHERE name = '%1'").arg(name));
+    }
 
     if (!q.isActive()) {
     }
@@ -177,12 +178,68 @@ QStringList Storage::getOps()
     return res;
 }
 
-bool Storage::saveTask(const TaskDesc& task)
+bool Storage::saveTasks(const TaskBatch& batch)
 {
+    for (const QString& ib : batch.ibs)
+        for (const QString& op : batch.ops) {
+            QString quStr = QString("INSERT INTO Task VALUES ('%1', '%2', '%3', '%4')")
+                    .arg(batch.uuid).arg(ib).arg(op).arg(batch.time);
 
+            QSqlQuery q(quStr);
+
+            if (!q.isActive()) {
+                qDebug() << q.lastError();
+
+                return false;
+            }
+        }
+
+    return true;
 }
 
-bool Storage::deleteTask(const QString& uuid)
+bool Storage::removeTask(const QString& uuid)
 {
+    QSqlQuery q("DELETE FROM Task WHERE batch = '" + uuid + "'");
 
+    if (!q.isActive()) {
+        qDebug() << q.lastError();
+    }
+
+    return q.isActive();
+}
+
+std::vector<TaskBatch> Storage::getTasks()
+{
+    std::vector<TaskBatch> tasks;
+
+    QSqlQuery q("SELECT batch, ib, op, time FROM Task ORDER BY batch");
+
+    if (!q.isActive()) {
+
+    }
+
+    while (q.next()) {
+        const QString uuid = q.value(0).toString();
+
+        if (tasks.empty() || tasks.back().uuid != uuid) {
+            TaskBatch batch = {
+                .uuid = uuid,
+                .time = q.value(3).toString()
+            };
+
+            tasks.push_back(batch);
+        }
+
+        TaskBatch& task = tasks.back();
+
+        const QString& ib = q.value(1).toString();
+        if (!task.ibs.contains(ib))
+            task.ibs.append(ib);
+
+        const QString& op = q.value(2).toString();
+        if (!task.ops.contains(op))
+            task.ops.append(op);
+    }
+
+    return tasks;
 }

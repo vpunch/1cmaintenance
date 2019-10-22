@@ -21,11 +21,11 @@ CREATE TABLE IF NOT EXISTS Op (
 );
 
 CREATE TABLE IF NOT EXISTS Task (
-	time	TEXT	NOT NULL,
+	batch	TEXT	NOT NULL,
 	ib		TEXT,
 	op		TEXT,
-	taskid	TEXT	NOT NULL,
-	PRIMARY KEY (ib, taskid),
+	time	TEXT	NOT NULL,
+	PRIMARY KEY (batch, ib, op),
 	FOREIGN KEY (ib) REFERENCES InfoBase (name),
 	FOREIGN KEY (op) REFERENCES Op (name)
 );

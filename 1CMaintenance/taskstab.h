@@ -18,11 +18,13 @@ class TasksTab : public ListWgt {
     Storage* stor;
 
     QTreeView* table;
+    QStandardItemModel* model;
 
     void add() override;
     void remove() override;
 
     void updateTasks();
+    void loadTasks();
 
 public:
     TasksTab(Storage* stor, QWidget* parent = nullptr);

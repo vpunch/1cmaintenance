@@ -118,21 +118,24 @@ TaskWizard::TaskWizard(Storage* stor, QWidget* parent) : QWizard(parent)
     addPage(ibsPage);
     addPage(opsPage);
     addPage(timePage);
+    setWindowTitle("Мастер создания задач");
 }
 
 void TaskWizard::accept()
 {
-    TaskDesc task;
+    TaskBatch batch;
+
+    batch.uuid = QUuid::createUuid().toString();
 
 
     for (auto ibCB : ibCBs)
         if (ibCB->isChecked())
-            task.ibs << ibCB->text();
+            batch.ibs << ibCB->text();
 
 
     for (auto opCB : opCBs)
         if (opCB->isChecked())
-            task.ops << opCB->text();
+            batch.ops << opCB->text();
 
 
     QString time; //m h d m w;
@@ -176,14 +179,10 @@ void TaskWizard::accept()
     }
     }
 
-    task.time = time;
+    batch.time = time;
 
 
-    task.id = QUuid::createUuid();
-
-
-    stor->saveTask(task);
-
+    stor->saveTasks(batch);
 
     QDialog::accept();
 }

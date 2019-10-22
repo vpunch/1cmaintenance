@@ -15,11 +15,11 @@
 #include <QUuid>
 
 
-struct TaskDesc {
+struct TaskBatch {
+    QString uuid;
     QStringList ibs;
     QStringList ops;
     QString time;
-    QUuid id;
 };
 
 struct IBDesc {
@@ -51,15 +51,16 @@ public:
     bool saveIB(const QString& name,
             const IBDesc& desc,
             const QString& oldName = QString());
-    bool deleteIB(const QString& name);
+    bool removeIB(const QString& name);
 
     bool setParam(const QString& name, const QString& value);
     QString getParam(const QString& name);
 
     QStringList getOps();
 
-    bool saveTask(const TaskDesc& task);
-    bool deleteTask(const QString& uuid);
+    std::vector<TaskBatch> getTasks();
+    bool saveTasks(const TaskBatch& batch);
+    bool removeTask(const QString& uuid);
 };
 
 #endif //STORAGE_H
