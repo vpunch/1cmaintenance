@@ -1,8 +1,6 @@
 #ifndef IBSTAB_H
 #define IBSTAB_H
 
-#include <algorithm>
-
 #include <QSplitter>
 #include <QListView>
 #include <QScrollArea>
@@ -25,14 +23,12 @@ class IBsTab : public ListWgt {
 
     IBDescWgt* descWgt;
 
-    /*
-     * Вспомогательные методы, используй updateIBs вместо них
-     */
     void readIBs();
-    void loadIBs();
 
     void add() override;
     void remove() override;
+
+    void loadList() override;
 
 private slots:
     void fillDescWgt(const QModelIndex& cur, const QModelIndex&);
@@ -41,7 +37,7 @@ private slots:
 public:
     explicit IBsTab(Storage* stor, QWidget* parent = nullptr);
 
-    void updateIBs();
+    void updateList() override;
 
 public slots:
     void updateCommon();

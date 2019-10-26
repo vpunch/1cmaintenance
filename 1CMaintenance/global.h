@@ -12,10 +12,13 @@
 
 namespace rot {
     int point2px(int count);
+
     QFormLayout* formLay();
 
     using IBasesT = std::map<QString, std::vector<std::pair<QString, QString>>>;
     IBasesT ibases();
+
+    //parseDB();
 }
 
 #endif //GLOBAL_H

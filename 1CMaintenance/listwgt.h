@@ -1,6 +1,8 @@
 #ifndef LISTWGT_H
 #define LISTWGT_H
 
+#include <algorithm>
+
 #include <QAbstractItemView>
 #include <QMenu>
 
@@ -19,8 +21,12 @@ protected:
     virtual void add() = 0;
     virtual void remove() = 0;
 
+    virtual void loadList() = 0;
+
 public:
     explicit ListWgt(QAbstractItemView* listView, QWidget* parent = nullptr);
+
+    virtual void updateList();
 };
 
 #endif //LISTWGT_H

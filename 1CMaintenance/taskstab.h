@@ -23,8 +23,7 @@ class TasksTab : public ListWgt {
     void add() override;
     void remove() override;
 
-    void updateTasks();
-    void loadTasks();
+    void loadList() override;
 
 public:
     TasksTab(Storage* stor, QWidget* parent = nullptr);

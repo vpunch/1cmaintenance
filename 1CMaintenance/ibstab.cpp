@@ -33,7 +33,7 @@ IBsTab::IBsTab(Storage* stor, QWidget* parent)
     lay->addWidget(splt);
     setLayout(lay);
 
-    updateIBs();
+    updateList();
 }
 
 void IBsTab::updateCommon()
@@ -41,20 +41,12 @@ void IBsTab::updateCommon()
     descWgt->loadCommon();
 }
 
-void IBsTab::updateIBs()
+void IBsTab::updateList()
 {
-    int r = ibsView->currentIndex().row();
+    ListWgt::updateList();
 
-    ibsModel->clear();
-    loadIBs();
-    readIBs();
-
-    r = std::min(r, ibsModel->rowCount() - 1);
-    if (r < 0) {
+    if (!ibsView->currentIndex().isValid())
         descWgt->setDisabled(true);
-    } else {
-        ibsView->setCurrentIndex(ibsModel->index(r, 0));
-    }
 }
 
 void IBsTab::acceptChange(const QString& ibName, const IBDesc& data)
@@ -66,10 +58,10 @@ void IBsTab::acceptChange(const QString& ibName, const IBDesc& data)
         //exit
     }
 
-    updateIBs();
+    updateList();
 }
 
-void IBsTab::loadIBs()
+void IBsTab::loadList()
 {
     const IBs& ibs = stor->getIBs();
 
@@ -78,6 +70,8 @@ void IBsTab::loadIBs()
         item->setData(QVariant::fromValue<IBDesc>(ib.second));
         ibsModel->appendRow(item);
     }
+
+    readIBs();
 }
 
 void IBsTab::readIBs()
@@ -127,13 +121,13 @@ void IBsTab::add()
     };
 
     stor->saveIB(name, desc);
-    updateIBs();
+    updateList();
 }
 
 void IBsTab::remove()
 {
     stor->removeIB(ibsView->currentIndex().data().toString());
-    updateIBs();
+    updateList();
 }
 
 void IBsTab::fillDescWgt(const QModelIndex& cur, const QModelIndex&)

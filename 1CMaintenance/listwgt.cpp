@@ -29,3 +29,17 @@ void ListWgt::showMenu(const QPoint& pos)
     else
         itemMenu.exec(globalPos);
 }
+
+void ListWgt::updateList()
+{
+    QAbstractItemModel* model = listView->model();
+    int curRow = listView->currentIndex().row();
+
+    model->removeRows(0, model->rowCount());
+
+    loadList();
+
+    curRow = std::min(curRow, model->rowCount() - 1);
+    if (curRow >= 0)
+        listView->setCurrentIndex(model->index(curRow, 0));
+}

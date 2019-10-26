@@ -21,7 +21,7 @@ TasksTab::TasksTab(Storage* stor, QWidget* parent)
     lay->addWidget(table);
     this->setLayout(lay);
 
-    updateTasks();
+    updateList();
 }
 
 void TasksTab::add()
@@ -29,7 +29,7 @@ void TasksTab::add()
     TaskWizard wiz(stor, this);
 
     connect(&wiz, &QDialog::accepted, this, [this] {
-        updateTasks();
+        updateList();
     });
 
     wiz.exec();
@@ -40,23 +40,10 @@ void TasksTab::remove()
     QModelIndex headIdx = model->index(table->currentIndex().row(), 0);
     const QString uuid = model->data(headIdx, Qt::UserRole + 1).toString();
     stor->removeTask(uuid);
-    updateTasks();
+    updateList();
 }
 
-void TasksTab::updateTasks()
-{
-    int r = table->currentIndex().row();
-
-    model->clear();
-    loadTasks();
-
-    r = std::min(r, model->rowCount() - 1);
-    if (r >= 0) {
-        table->setCurrentIndex(model->index(r, 0));
-    }
-}
-
-void TasksTab::loadTasks()
+void TasksTab::loadList()
 {
     for (auto batch : stor->getTasks()) {
         QList<QStandardItem*> items;
@@ -66,7 +53,35 @@ void TasksTab::loadTasks()
         items.append(headItem);
 
         items.append(new QStandardItem(batch.ops.join(", ")));
-        items.append(new QStandardItem(batch.time));
+
+
+//parse time
+        std::map<uint, QString> weekMap = {
+            {0, "вс."},
+            {1, "пн."},
+            {2, "вт."},
+            {3, "ср."},
+            {4, "чт."},
+            {5, "пт."},
+            {6, "сб."}
+        };
+
+        QStringList timeSects = batch.time.split(' ');
+
+        QString time = timeSects[1] + ":" + timeSects[0];
+
+        if (timeSects[2] != "*") {
+            time += " " + timeSects[2];
+        }
+        else {
+            QStringList weeks;
+            for (const QString& weekN : timeSects[4].split(","))
+                weeks << weekMap[weekN.toUInt()];
+            time += " " + weeks.join(",");
+        }
+
+        items.append(new QStandardItem(time));
+
 
         model->appendRow(items);
     }
