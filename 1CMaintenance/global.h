@@ -18,7 +18,15 @@ namespace rot {
     using IBasesT = std::map<QString, std::vector<std::pair<QString, QString>>>;
     IBasesT ibases();
 
-    //parseDB();
+    const QStringList weekOrder = {
+            "вс.",
+            "пн.",
+            "вт.",
+            "ср.",
+            "чт.",
+            "пт.",
+            "сб."
+    };
 }
 
 #endif //GLOBAL_H

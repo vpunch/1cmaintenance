@@ -6,10 +6,18 @@
 
 #include <QVBoxLayout>
 #include <QStandardItemModel>
+#include <QProcess>
+#include <QInputDialog>
 
 #include "listwgt.h"
 #include "storage.h"
 #include "taskwizard.h"
+#include "global.h"
+
+#include <Windows.h>
+#define SECURITY_WIN32
+#include <Security.h>
+#include <Lmcons.h>
 
 
 class TasksTab : public ListWgt {

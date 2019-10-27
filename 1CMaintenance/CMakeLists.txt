@@ -38,4 +38,10 @@ add_executable(1CMaintenance
   data.qrc
 )
 
-target_link_libraries(1CMaintenance PRIVATE Qt5::Widgets Qt5::Sql)
+if(WIN32)
+    set(ADDITIONAL_LIBRARIES secur32)
+else()
+    set(ADDITIONAL_LIBRARIES "")
+endif()
+
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Widgets Qt5::Sql ${ADDITIONAL_LIBRARIES})

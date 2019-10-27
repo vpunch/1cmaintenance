@@ -74,6 +74,7 @@ TaskWizard::TaskWizard(Storage* stor, QWidget* parent) : QWizard(parent)
     }
     ++col;
     monthlyLay->addWidget(new QLabel("числа."), row, col, 1, rowlen - col);
+
     monthlyLay->setColumnStretch(rowlen - 1, 1);
     monthlyLay->setMargin(0);
 
@@ -84,12 +85,12 @@ TaskWizard::TaskWizard(Storage* stor, QWidget* parent) : QWizard(parent)
     auto weeklyLay = new QHBoxLayout;
 
     weeklyLay->addWidget(new QLabel("по"));
-    QStringList weeks = {"вс.", "пн.", "вт.", "ср.", "чт.", "пт.", "сб."};
-    for (const QString& week : weeks) {
+    for (const QString& week : rot::weekOrder) {
         auto weekDayCB = new QCheckBox(week);
         weekDayCBs << weekDayCB;
         weeklyLay->addWidget(weekDayCB);
     }
+
     weeklyLay->addStretch(1);
     weeklyLay->setMargin(0);
 
@@ -140,8 +141,8 @@ void TaskWizard::accept()
 
     QString time; //m h d m w;
 
-    time += QString::number(timeEd->time().minute()) + " ";
-    time += QString::number(timeEd->time().hour()) + " ";
+    time += timeEd->sectionText(QDateTimeEdit::MinuteSection) + " ";
+    time += timeEd->sectionText(QDateTimeEdit::HourSection) + " ";
 
     switch (typeCombo->currentIndex()) {
     case 0:
