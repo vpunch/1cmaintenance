@@ -7,11 +7,20 @@
 #include <QLabel>
 #include <QComboBox>
 #include <QStackedWidget>
+#include <QInputDialog>
 
 #include <QGridLayout>
+#include <QProcess>
 
 #include "storage.h"
 #include "global.h"
+
+#ifdef Q_OS_WIN
+#include <Windows.h>
+#define SECURITY_WIN32
+#include <Security.h>
+#include <Lmcons.h>
+#endif
 
 
 class TaskWizard : public QWizard {

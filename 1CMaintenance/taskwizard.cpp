@@ -1,6 +1,8 @@
 #include "taskwizard.h"
 
 #include <QDebug>
+#include <QTextCodec>
+#include <QTimer>
 
 
 TaskWizard::TaskWizard(Storage* stor, QWidget* parent) : QWizard(parent)
@@ -128,6 +130,58 @@ void TaskWizard::accept()
 
     batch.uuid = QUuid::createUuid().toString();
 
+#ifdef Q_OS_WIN
+//get user name
+    QStringList samUName;
+
+    WCHAR bSamUName[256];
+    DWORD nSamUName = sizeof(bSamUName);
+    if (GetUserNameExW(NameSamCompatible, bSamUName, &nSamUName))
+        samUName = QString::fromWCharArray(bSamUName).split("\\");
+
+//get user password
+    bool ok;
+    QString passW = QInputDialog::getText(
+            this, samUName.join("\\"), "Пароль:", QLineEdit::Password, "", &ok/*, Qt::MSWindowsFixedSizeDialogHint*/);
+
+    if (!ok || passW.isEmpty())
+        return;
+
+//check user creds
+    LPCWSTR bUName = samUName[1].toStdWString().c_str();
+    LPCWSTR bDName = samUName[0].toStdWString().c_str();
+    LPCWSTR bPassW = passW.toStdWString().c_str();
+    HANDLE token;
+
+    bool userExists = LogonUserW(
+            bUName, bDName, bPassW,
+            LOGON32_LOGON_NETWORK,
+            LOGON32_PROVIDER_DEFAULT,
+            &token);
+
+    CloseHandle(token);
+    if (!userExists)
+        return;
+
+//add task
+    QString taskName = "1CM-" + batch.uuid;
+    QString shell = "cmd.exe";
+    QStringList cmd = {
+        "/C",
+        "schtasks" "/Query", "/TN", taskName, "||",
+        "schtasks", "/Create",
+            "/RU", samUName.join("\\"), "/RP", "",
+            "/TN", taskName, "/SC", "WEEKLY",
+            "/TR", qApp->applicationFilePath() + " -i " + batch.uuid
+    };
+
+
+    QProcess* newTaskProc = new QProcess();
+    newTaskProc->start(shell, cmd);
+    newTaskProc->waitForStarted();
+    newTaskProc->write(passW.toUtf8() + "\r\n");
+    //QTextCodec::codecForName("CP866")->toUnicode(newTaskProc->readAllStandardError());
+#endif
 
     for (auto ibCB : ibCBs)
         if (ibCB->isChecked())
